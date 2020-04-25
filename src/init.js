@@ -36,7 +36,7 @@ function preload() {
 }
 
 function create() {
-    // background = this.add.image(MAX_WIDTH/2, MAX_HEIGHT/2, 'background');
+    background = this.add.image(MAX_WIDTH/2, MAX_HEIGHT/2, 'background');
     car = this.matter.add.image(600, 200, "car");
     car.setFixedRotation();
     car.setFrictionAir(0.01);
