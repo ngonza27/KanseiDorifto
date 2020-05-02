@@ -39,6 +39,15 @@ var cursors;
 var car;
 var coin;
 var velocity = 0;
+var coinWasHit = false;
+var coins = [
+    this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin'),
+    this.matter.add.image(100,200,'coin'),
+    this.matter.add.image(500,500,'coin'),
+    this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin'),
+    this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin'),
+];
+var coinCounter = 0;
 
 function preload() {
     this.load.image("car", "./assets/car.png");
@@ -48,7 +57,7 @@ function preload() {
 
 function create() {
     background = this.add.image(MAX_WIDTH/2, MAX_HEIGHT/2, 'background');
-    coin = this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin');
+    // coin = this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin');
     car  = this.matter.add.image(MAX_WIDTH-MAX_WIDTH/2.55, MAX_HEIGHT/1.26, "car");
     
     car.rotation= 3.15;
@@ -66,35 +75,25 @@ function create() {
 
 function update() {
 
-    // this.matter.world.on('collisionstart', function (event, coin, car) {
-    //     //this.matter.world.remove(coin);
-    //     console.log("que hubo prro");
-    //     coin.destroy();
-    // });
+    coin = coins[coinCounter];
 
-    // this.matterCollision.addOnCollideStart({
-    //     objectA: car,
-    //     objectB: coin,
-    //     callback: function(eventData) {
-    //         this.matter.world.remove(coin);
-    //         coin.destroy();
-    //     },
-    //     context: this 
-    // });
-
-    if (cursors.left.isDown) {
-        car.angle -= 2.5;
-    }
-    else if (cursors.right.isDown) {
-        car.angle += 2.5;
+    if(!coinWasHit){
+        this.matterCollision.addOnCollideStart({
+            objectA: car,
+            objectB: coin,
+            callback: function(eventData) {
+                coinWasHit = true;
+                coinCounter += 1;
+                this.matter.world.remove(coin);
+                coin.destroy();
+            },
+            context: this 
+        });
     }
 
-    if (cursors.up.isDown) {
-        //car.thrust(0.0006);
-        car.thrust(0.0004);
-    }
-    else if (cursors.down.isDown) {
-        //car.thrustBack(0.0006);
-        car.thrustBack(0.0004);
-    }
+    if (cursors.left.isDown) { car.angle -= 2.5; }
+    else if (cursors.right.isDown) { car.angle += 2.5; }
+
+    if (cursors.up.isDown) { car.thrust(0.0004); }
+    else if (cursors.down.isDown) { car.thrustBack(0.0004); }
 }
