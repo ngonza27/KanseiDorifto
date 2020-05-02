@@ -39,8 +39,10 @@ var cursors;
 var car;
 var coin;
 var velocity = 0;
-var coinWasHit = false;
-var coins = [];
+
+var actualCoinWasHit = false;
+var actualCoin;
+
 var coinCounter = 0;
 
 var positions = [
@@ -71,41 +73,37 @@ function create() {
     car.setScale(.15, .15);
 
     cursors = this.input.keyboard.createCursorKeys();
-    
-    for(var posInt = 0; posInt < positions.length; posInt++){
-        console.log(positions[posInt])
-        var internalCoint = this.matter.add.image(positions[posInt][0],positions[posInt][1],'coin').setScale(.1, .1);
-        internalCoint.visible = false;
-        coins[posInt] = [ internalCoint, false];
-    }
 
+    createNewCoin(0, this);
+}
 
+function createNewCoin(position, context){
+    var internalCoint = context.matter.add.image(positions[position][0],positions[position][1],'coin').setScale(.1, .1);
+    actualCoinWasHit = false;
+    actualCoin = internalCoint;
+    coinCounter = coinCounter + 1;
 }
 
 function update() {
     
-    if (coinCounter < coins.length){
-        coins[coinCounter][0].visible = true;
-        if(!coins[coinCounter][1]){
-            var actualCoint = coins[coinCounter][0];
-            this.matterCollision.addOnCollideStart({
-                objectA: car,
-                objectB: actualCoint,
-                callback: function(eventData) {
-                    coins[coinCounter][1] = true;
-                    this.matter.world.remove(actualCoint);
-                    actualCoint.destroy();
-                },
-                context: this 
-            });
-            
-        }
+    if(!actualCoinWasHit){
+        this.matterCollision.addOnCollideStart({
+            objectA: car,
+            objectB: actualCoin,
+            callback: function(eventData) {
+                actualCoinWasHit = true;
+                this.matter.world.remove(actualCoin);
+                actualCoin.destroy();
+            },
+            context: this 
+        });
+    }
 
-        if (coins[coinCounter][1]){
-            coins[coinCounter][0].visible = false;
-            coinCounter = coinCounter + 1;
+    if (coinCounter < positions.length){
+        if (actualCoinWasHit){
+            createNewCoin(coinCounter, this);
         }
-    }else{
+    }else {
         console.log("Ganaste!!!")
     }
     
@@ -116,3 +114,4 @@ function update() {
     if (cursors.up.isDown) { car.thrust(0.0004); }
     else if (cursors.down.isDown) { car.thrustBack(0.0004); }
 }
+
