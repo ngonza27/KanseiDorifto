@@ -74,18 +74,18 @@ function create() {
     
     for(var posInt = 0; posInt < positions.length; posInt++){
         console.log(positions[posInt])
-        coins[posInt] = [
-            this.matter.add.image(positions[posInt][0],positions[posInt][1],'coin').setScale(.1, .1), 
-            false
-        ];
+        var internalCoint = this.matter.add.image(positions[posInt][0],positions[posInt][1],'coin').setScale(.1, .1);
+        internalCoint.visible = false;
+        coins[posInt] = [ internalCoint, false];
     }
+
 
 }
 
 function update() {
-
+    
     if (coinCounter < coins.length){
-
+        coins[coinCounter][0].visible = true;
         if(!coins[coinCounter][1]){
             var actualCoint = coins[coinCounter][0];
             this.matterCollision.addOnCollideStart({
@@ -102,6 +102,7 @@ function update() {
         }
 
         if (coins[coinCounter][1]){
+            coins[coinCounter][0].visible = false;
             coinCounter = coinCounter + 1;
         }
     }else{
