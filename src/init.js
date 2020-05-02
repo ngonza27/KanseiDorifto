@@ -46,10 +46,15 @@ var actualCoin;
 var coinCounter = 0;
 
 var positions = [
-    [MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21],
-    [5,5],
-    [15,15],
-    [25,25]
+    [MAX_WIDTH-MAX_WIDTH/1.38,MAX_HEIGHT/1.217],
+    [MAX_WIDTH-MAX_WIDTH/1.145,MAX_HEIGHT/8.21],
+    [MAX_WIDTH-MAX_WIDTH/1.4,MAX_HEIGHT/1.5],
+    [MAX_WIDTH-MAX_WIDTH/2.7,MAX_HEIGHT/2.71],
+    [MAX_WIDTH-MAX_WIDTH/18,MAX_HEIGHT/3.7],
+    [MAX_WIDTH-MAX_WIDTH/1.6,MAX_HEIGHT/5],
+    [MAX_WIDTH-MAX_WIDTH/2,MAX_HEIGHT/1.65],
+    [MAX_WIDTH-MAX_WIDTH/18.7,MAX_HEIGHT/1.45],
+    [MAX_WIDTH-MAX_WIDTH/1.609,MAX_HEIGHT/1.217]
 ]
 
 function preload() {
@@ -85,7 +90,6 @@ function createNewCoin(position, context){
 }
 
 function update() {
-    
     if(!actualCoinWasHit){
         this.matterCollision.addOnCollideStart({
             objectA: car,
@@ -103,10 +107,9 @@ function update() {
         if (actualCoinWasHit){
             createNewCoin(coinCounter, this);
         }
-    }else {
+    } else { 
         console.log("Ganaste!!!")
     }
-    
 
     if (cursors.left.isDown) { car.angle -= 2.5; }
     else if (cursors.right.isDown) { car.angle += 2.5; }
@@ -114,4 +117,3 @@ function update() {
     if (cursors.up.isDown) { car.thrust(0.0004); }
     else if (cursors.down.isDown) { car.thrustBack(0.0004); }
 }
-
