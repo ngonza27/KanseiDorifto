@@ -40,14 +40,15 @@ var car;
 var coin;
 var velocity = 0;
 var coinWasHit = false;
-var coins = [
-    this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin'),
-    this.matter.add.image(100,200,'coin'),
-    this.matter.add.image(500,500,'coin'),
-    this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin'),
-    this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin'),
-];
+var coins = [];
 var coinCounter = 0;
+
+var positions = [
+    [MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21],
+    [5,5],
+    [15,15],
+    [25,25]
+]
 
 function preload() {
     this.load.image("car", "./assets/car.png");
@@ -57,7 +58,7 @@ function preload() {
 
 function create() {
     background = this.add.image(MAX_WIDTH/2, MAX_HEIGHT/2, 'background');
-    // coin = this.matter.add.image(MAX_WIDTH-MAX_WIDTH/1.5,MAX_HEIGHT/1.21,'coin');
+    
     car  = this.matter.add.image(MAX_WIDTH-MAX_WIDTH/2.55, MAX_HEIGHT/1.26, "car");
     
     car.rotation= 3.15;
@@ -67,29 +68,46 @@ function create() {
     this.matter.world.setBounds(0, 0, MAX_WIDTH, MAX_HEIGHT);
     
     background.setScale(1.6, 1.9);
-    coin.setScale(.1, .1);
     car.setScale(.15, .15);
 
     cursors = this.input.keyboard.createCursorKeys();
+    
+    for(var posInt = 0; posInt < positions.length; posInt++){
+        console.log(positions[posInt])
+        coins[posInt] = [
+            this.matter.add.image(positions[posInt][0],positions[posInt][1],'coin').setScale(.1, .1), 
+            false
+        ];
+    }
+
 }
 
 function update() {
 
-    coin = coins[coinCounter];
+    if (coinCounter < coins.length){
 
-    if(!coinWasHit){
-        this.matterCollision.addOnCollideStart({
-            objectA: car,
-            objectB: coin,
-            callback: function(eventData) {
-                coinWasHit = true;
-                coinCounter += 1;
-                this.matter.world.remove(coin);
-                coin.destroy();
-            },
-            context: this 
-        });
+        if(!coins[coinCounter][1]){
+            var actualCoint = coins[coinCounter][0];
+            this.matterCollision.addOnCollideStart({
+                objectA: car,
+                objectB: actualCoint,
+                callback: function(eventData) {
+                    coins[coinCounter][1] = true;
+                    this.matter.world.remove(actualCoint);
+                    actualCoint.destroy();
+                },
+                context: this 
+            });
+            
+        }
+
+        if (coins[coinCounter][1]){
+            coinCounter = coinCounter + 1;
+        }
+    }else{
+        console.log("Ganaste!!!")
     }
+    
 
     if (cursors.left.isDown) { car.angle -= 2.5; }
     else if (cursors.right.isDown) { car.angle += 2.5; }
