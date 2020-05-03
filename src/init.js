@@ -39,12 +39,10 @@ var cursors;
 var car;
 var coin;
 var velocity = 0;
-
 var actualCoinWasHit = false;
 var actualCoin;
-
 var coinCounter = 0;
-
+var win = false;
 var positions = [
     [MAX_WIDTH-MAX_WIDTH/1.38,MAX_HEIGHT/1.217],
     [MAX_WIDTH-MAX_WIDTH/1.145,MAX_HEIGHT/8.21],
@@ -54,7 +52,8 @@ var positions = [
     [MAX_WIDTH-MAX_WIDTH/1.6,MAX_HEIGHT/5],
     [MAX_WIDTH-MAX_WIDTH/2,MAX_HEIGHT/1.65],
     [MAX_WIDTH-MAX_WIDTH/18.7,MAX_HEIGHT/1.45],
-    [MAX_WIDTH-MAX_WIDTH/1.609,MAX_HEIGHT/1.217]
+    [MAX_WIDTH-MAX_WIDTH/1.609,MAX_HEIGHT/1.217],
+    [-100,-100]
 ]
 
 function preload() {
@@ -107,8 +106,12 @@ function update() {
         if (actualCoinWasHit){
             createNewCoin(coinCounter, this);
         }
-    } else { 
-        console.log("Ganaste!!!")
+    } else if(!win) {
+        console.log("GANE")
+        const myDiv = document.createElement('div');
+        myDiv.textContent = 'GANASTE!';
+        document.body.appendChild(myDiv);
+        win = true;
     }
 
     if (cursors.left.isDown) { car.angle -= 2.5; }
