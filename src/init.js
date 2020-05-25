@@ -59,7 +59,8 @@ var positions = [
 function preload() {
     this.load.image("car", "./assets/car.png");
     this.load.image("coin", "./assets/coin.png");
-    this.load.image('background', './assets/track.png');
+    this.load.image("background", "./assets/track.png");
+    this.load.audio("flutter_sound", "./assets/turbo_audio.mp3");
 }
 
 function create() {
@@ -79,6 +80,7 @@ function create() {
     cursors = this.input.keyboard.createCursorKeys();
 
     createNewCoin(0, this);
+    this.flutter = this.sound.add("flutter_sound")
 }
 
 function createNewCoin(position, context){
@@ -114,9 +116,18 @@ function update() {
         win = true;
     }
 
-    if (cursors.left.isDown) { car.angle -= 2.5; }
-    else if (cursors.right.isDown) { car.angle += 2.5; }
+    if (cursors.left.isDown) { 
+        car.angle -= 2.5; 
+    }
+    else if (cursors.right.isDown) { 
+        car.angle += 2.5; 
+    }
 
-    if (cursors.up.isDown) { car.thrust(0.0004); }
-    else if (cursors.down.isDown) { car.thrustBack(0.0004); }
+    if (cursors.up.isDown) {
+        this.flutter.play();
+        car.thrust(0.0004); 
+    }
+    else if (cursors.down.isDown) { 
+        car.thrustBack(0.0004); 
+    }
 }
